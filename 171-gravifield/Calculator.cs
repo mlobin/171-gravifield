@@ -5,18 +5,13 @@ using System.Linq;
 using System.Web;
 
 namespace _171_gravifield
-{
-    public class Calculator
+{ 
+    public static class Calculator
     {
-        public Bitmap result
-        {
-            get { Calculate(); return _result; }
-            set { _result = value; }
-        }
 
-        private Bitmap _result;
+        private static Bitmap Result;
 
-        private void Calculate()
+        private static void Calculate(Map map)
         {
 
         }
