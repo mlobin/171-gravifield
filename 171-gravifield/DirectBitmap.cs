@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web;
@@ -50,6 +51,15 @@ namespace _171_gravifield
             Disposed = true;
             Bitmap.Dispose();
             BitsHandle.Free();
+        }
+
+        public byte[] ConvertToByteArray()
+        {
+            using (var stream = new MemoryStream())
+            {
+                this.Bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
         }
     }
 }

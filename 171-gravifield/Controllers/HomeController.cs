@@ -8,7 +8,7 @@ namespace _171_gravifield.Controllers
 {
     public class HomeController : Controller
     {
-        public Map MapPlanets = new Map();
+        public static Map MapPlanets;
         public ActionResult Index() //ввод размеров поля
         {
             return View();
@@ -16,8 +16,7 @@ namespace _171_gravifield.Controllers
         [HttpPost]
         public ActionResult Pole(int w, int h)
         {
-            MapPlanets.width = w;
-            MapPlanets.height = h;
+            MapPlanets = new Map(w, h);
             return RedirectToAction("ListManage");
         }
         [HttpGet]
@@ -39,21 +38,22 @@ namespace _171_gravifield.Controllers
         [HttpPost]
         public ActionResult Add(string name, int x, int y, double mass)
         {
-            
+                if (MapPlanets is null) 
+                return RedirectToAction("/Home/Index");
                 MapPlanets.addPlanet(name, x, y, mass);
                 return RedirectToAction("ListManage");
         }
-        [HttpPost]
-        public RedirectResult Delete(string nam) //нажата какая-то кнопка Удалить
+
+        public RedirectResult Delete(string id) //нажата какая-то кнопка Удалить
         {
-            MapPlanets.deletePlanet(nam);
+            MapPlanets.deletePlanet(id);
             return Redirect("/Home/ListManage");
         }
-        [HttpPost]
+
         public ActionResult Count() //нажата кнопка Посчитать
         {
             Calculator.Calculate(MapPlanets);
-            return View(Calculator.Result);
+            return base.File(Calculator.Result.ConvertToByteArray(), "image/png");
         }
     }
 }

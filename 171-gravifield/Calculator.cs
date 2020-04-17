@@ -10,16 +10,16 @@ namespace _171_gravifield
 
     public static class Calculator
     {
+        private static FastMath math = new FastMath();
+        public static DirectBitmap Result;
 
-        private static Bitmap Result;
-
-        const double G = 6.67191 * 1e-11;
+        public const double G = 6.67191 * 1e-11;
         static double max, min = 0, speed;
         static double mx = 0, m = 0, my = 0;
 
         //TODO: параллельность
         //TODO: проверки "на дурака"
-        private static void Calculate(Map map) 
+        public static void Calculate(Map map) 
         {
             int w = map.width;
             int h = map.height;
@@ -27,6 +27,7 @@ namespace _171_gravifield
             foreach (Planet t in map.planets)
                 max = Math.Max(max, t.mass);
             max *= G;
+            max /= Math.Sqrt(w * h);
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
                 {
@@ -36,8 +37,8 @@ namespace _171_gravifield
                         double xx = p.x - i; //расстояние по Х до планеты
                         double yy = p.y - j; //расстояние по Y до планеты
                         if ((xx == 0) && (yy == 0)) yy = 0.5; //Чтобы не делить на ноль
-                        double F = G * p.mass / (xx * xx + yy * yy); //сократили формулу 
-                        double aa = Math.Atan2(yy, xx);
+                        double F = p.gmass / (xx * xx + yy * yy); //сократили формулу 
+                        double aa = math.calcatan2(yy, xx);
                         Fx += F * Math.Cos(aa);
                         Fy += F * Math.Sin(aa);
                     }
@@ -47,7 +48,7 @@ namespace _171_gravifield
                         TempResult.SetPixel(i, j, Color.FromArgb(precolor - 255, 510 - precolor, 0));
                     else TempResult.SetPixel(i, j, Color.FromArgb(0, precolor, 255 - precolor));
                 }
-            Result = TempResult.Bitmap;
+            Result = TempResult;
         }
 
 
@@ -124,7 +125,7 @@ namespace _171_gravifield
     {
         public string name;
         public int x, y;
-        public double mass;
+        public double mass, gmass;
 
         public Planet(string name, int x, int y, double mass)
         {
@@ -132,6 +133,7 @@ namespace _171_gravifield
             this.x = x;
             this.y = y;
             this.mass = mass;
+            this.gmass = mass * Calculator.G;
         }
 
         public Planet() //Just in case, never needed
