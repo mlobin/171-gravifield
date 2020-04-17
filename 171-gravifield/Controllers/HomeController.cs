@@ -55,5 +55,11 @@ namespace _171_gravifield.Controllers
             Calculator.Calculate(MapPlanets);
             return base.File(Calculator.Result.ConvertToByteArray(), "image/png");
         }
+
+        public ActionResult Gif()
+        {
+            Calculator.Gif(MapPlanets);
+            return base.File("D:/Snakeware.Animated.gif", "image/gif");
+        }
     }
 }

@@ -23,21 +23,22 @@
             </thead>
             @foreach (var element in Model)
             {
-            <tr>
-                <td><p>@element.name</p></td>
-                <td><p>@element.x, @element.y</p></td>
-                <td><p>@element.mass</p></td>
-                <td>@Html.ActionLink("Удалить","Delete", "Home", new { id = element.name }, new { @class = "btn btn-danger", @style = "color:white" })</td>
-            </tr>
+                <tr>
+                    <td><p>@element.name</p></td>
+                    <td><p>@element.x, @element.y</p></td>
+                    <td><p>@element.mass</p></td>
+                    <td>@Html.ActionLink("Удалить", "Delete", "Home", new { id = element.name }, new { @class = "btn btn-danger", @style = "color:white" })</td>
+                </tr>
             }
-            
-           
+
+
         </table>
 
         <br><p>
             <button class="btn btn-default" onclick="location.href ='/Home/Add/'">Добавить</button>
         </p><br>
         <button class="btn btn-primary btn-lg" onclick="location.href ='/Home/Count/'">Посчитать</button>
+        <button class="btn btn-primary btn-lg" onclick="location.href ='/Home/Gif/'">Гифочку мне!</button>
     </div>
 </body>
 </html>

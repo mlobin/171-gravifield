@@ -61,5 +61,10 @@ namespace _171_gravifield
                 return stream.ToArray();
             }
         }
+
+        public void Save(string filename)
+        {
+            this.Bitmap.Save(filename, ImageFormat.Png);
+        }
     }
 }
