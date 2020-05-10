@@ -68,12 +68,11 @@ namespace _171_gravifield
     {
         public List<Planet> planets;
 
-        public int width, height;
+        public int width=0, height=0; //по умолчанию
 
-        public Map(int x, int y)
+        public Map()
         {
             planets = new List<Planet>();
-            width = x; height = y;
         }
 
         private void addPlanet(Planet p)

@@ -8,52 +8,70 @@ namespace _171_gravifield.Controllers
 {
     public class HomeController : Controller
     {
-        public static Map MapPlanets;
-        public ActionResult Index() //ввод размеров поля
-        {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Pole(int w, int h)
-        {
-            MapPlanets = new Map(w, h);
-            return RedirectToAction("ListManage");
-        }
-        [HttpGet]
-        public ActionResult ListManage() //вывод текущего списка и кнопок
-        {
-            //if (MapPlanets.planets.Count != 0)
-                return View(MapPlanets.planets);
-            
-            //else
-               // return RedirectToAction("Add");
-        }
+        public static Map MapPlanets = new Map();
         
-
-        [HttpGet]
-        public ActionResult Add() //нажата кнопка Добавить - вывод формы
+        public JsonResult Index() //Вывод всего
         {
-            return View();
+            if (Calculator.Result is null) //подсчет не начат
+            {
+                ViewBag.x = MapPlanets.width;
+                ViewBag.y = MapPlanets.height;
+                return Json(MapPlanets.planets, JsonRequestBehavior.AllowGet); 
+            }
+            else
+            {
+                //подсчет для картинки
+                byte[] pic = Calculator.Result.ConvertToByteArray();
+                string Base64 = Convert.ToBase64String(pic);
+                string Url = string.Format("data:image/png;base64,{0}", Base64);
+                ViewBag.Image = Url;
+                ViewBag.x = MapPlanets.width;
+                ViewBag.y = MapPlanets.height;
+                return Json(MapPlanets.planets, JsonRequestBehavior.AllowGet); 
+            }
         }
+
+        [HttpPost]
+        public ActionResult Pole(int w, int h) //Получение x y
+        {
+            MapPlanets.width = w;
+            MapPlanets.height = h;
+            if (!(Calculator.Result is null))
+            {
+                Calculator.Result = null;//очищаем картинку
+            }
+            return RedirectToAction("Index");   
+        }
+
         [HttpPost]
         public ActionResult Add(string name, int x, int y, double mass)
         {
-                if (MapPlanets is null) 
-                return RedirectToAction("/Home/Index");
-                MapPlanets.addPlanet(name, x, y, mass);
-                return RedirectToAction("ListManage");
+            MapPlanets.addPlanet(name, x, y, mass);
+            if(!(Calculator.Result is null))
+            {
+                Calculator.Result = null;//очищаем картинку
+            }
+            return RedirectToAction("Index");  
         }
 
-        public RedirectResult Delete(string id) //нажата какая-то кнопка Удалить
+        public ActionResult Delete(string id) 
         {
             MapPlanets.deletePlanet(id);
-            return Redirect("/Home/ListManage");
+            Calculator.Result = null;//очищаем картинку
+            return RedirectToAction("Index"); 
         }
 
-        public ActionResult Count() //нажата кнопка Посчитать
+        public ActionResult Count() //Посчитать
         {
             Calculator.Calculate(MapPlanets);
-            return base.File(Calculator.Result.ConvertToByteArray(), "image/png");
+            return RedirectToAction("Index");
+        }
+
+        public RedirectResult Clear(string id)//Очистка всего
+        {
+            MapPlanets = new Map();
+            Calculator.Result = null;
+            return Redirect("/Home/Index");
         }
     }
 }

@@ -1,24 +1,103 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+@model List<Planet>
 
+<!DOCTYPE html>
 
-<div>
-   
-    <form method="post" action="~/Home/Pole" class="form-horizontal">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-10">
-                    <h4>Введите размеры поля (в пикселях):</h4>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ListManage</title>
+</head>
+<body>
+    <div>
+        <p align="right">
+            <button class="btn btn-primary btn-lg" onclick="location.href ='/Home/Clear/'">Очичтить всё</button>
+        </p>
+        <center>
+            <form method="post" action="~/Home/Pole" class="form-horizontal">
+                <h4>Размер поля: &nbsp; @ViewBag.x x @ViewBag.y </h4>
+                <div class="col-md-4  input-group">
+                    <span class="input-group-addon" id="basic-addon1">X:</span>
+                    <input type="number" class="form-control" name="w" aria-describedby="basic-addon1" />
+                    <span class="input-group-addon" id="basic-addon2">Y:</span>
+                    <input type="number" class="form-control" name="h" aria-describedby="basic-addon2" />
+                </div>
+                <input class="btn btn-default" type="submit" value="Изменить" />
+
+            </form>
+        </center>
+
+        <form method="post" class="form-horizontal" action="~/Home/Add">
+            <h3>Добавление планеты</h3>
+            <div class="form-group">
+                <div class="col-md-2">
+                    <label for="name" class="control-label">Имя планеты:</label>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="name" class="form-control" />
                 </div>
             </div>
-            <div class="col-md-4  input-group">
-                <span class="input-group-addon" id="basic-addon1">X:</span>
-                <input type="number" class="form-control" name="w" aria-describedby="basic-addon1" />
-                <span class="input-group-addon" id="basic-addon2">Y:</span>
-                <input type="number" class="form-control" name="h" aria-describedby="basic-addon2" />
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label class="" for="xydiv">Расположение на поле</label>
+
+                    <div name="xydiv" class="form-group">
+                        <div class="col-md-4  input-group">
+                            <span class="input-group-addon" id="basic-addon1">X:</span>
+                            <input type="number" class="form-control" name="x" aria-describedby="basic-addon1" />
+                            <span class="input-group-addon" id="basic-addon2">Y:</span>
+                            <input type="number" class="form-control" name="y" aria-describedby="basic-addon2" />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <input class="btn btn-default" type="submit" value="Далее »" />
-    </form>
-</div>
+            <div class="form-group">
+                <div class="col-md-1">
+                    <label class="control-label" for="mass"> Масса:</label>
+                </div>
+                <div class=" col-md-3">
+                    <input type="number" class="form-control" name="mass" />
+                </div>
+            </div>
+            <input class="btn btn-default" type="submit" value="Добавить" />
+        </form>
+
+
+        <h3>Текущие планеты:</h3><br />
+        <table class="table table-striped">
+            <thead class="">
+                <tr>
+                    <th>Название</th>
+                    <th>Координаты</th>
+                    <th>Масса</th>
+                </tr>
+            </thead>
+            @foreach (var element in Model)
+            {
+                <tr>
+                    <td>
+                        <p>@element.name</p>
+                    </td>
+                    <td><p>@element.x, @element.y</p></td>
+                    <td><p>@element.mass</p></td>
+                    <td>@Html.ActionLink("Удалить", "Delete", "Home", new { id = element.name }, new { @class = "btn btn-danger", @style = "color:white" })</td>
+                </tr>
+            }
+
+        </table>
+
+        <br>
+        
+    </div>
+    <button class="btn btn-primary btn-lg" onclick="location.href ='/Home/Count/'">Посчитать</button> <br />
+
+    <h3>Визуализация</h3>
+    <center>
+        <img src="@ViewBag.Image" />
+    </center>
+
+
+</body>
+</html>
