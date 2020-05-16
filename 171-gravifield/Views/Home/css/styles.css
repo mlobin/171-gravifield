@@ -1,0 +1,39 @@
+﻿.form-group {
+    background-color: #4CAF50;
+    border: 1px solid green; /* Green border */
+    /*   color: white; /* White text */
+    padding: 10px; /* Some padding */
+    /*  cursor: pointer; /* Pointer/hand icon */
+    width: 100%; /* Set a width if needed */
+    /*    display: block; /* Make the buttons appear below each other */
+}
+
+label, label {
+    display: block;
+    padding-left: 20px;
+}
+
+.submit {
+    margin-top: 10px;
+    margin-left: 60px;
+}
+
+.addPlanetDiv {
+    position: relative;
+    left: 5%;
+    top: 2%; /* Положение от нижнего края */
+    float: left; /* Обтекание по правому краю */
+    width: 200px;
+}
+
+.editionPlanetDiv {
+    position: relative;
+    left: 60%;
+    top: 2%; /* Положение от нижнего края */
+    float: left; /* Обтекание по правому краю */
+    width: 200px; /* Ширина слоя */
+}
+
+select {
+    width: 200px; /* Ширина списка в пикселах */
+}

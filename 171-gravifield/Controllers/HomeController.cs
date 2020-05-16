@@ -9,7 +9,20 @@ namespace _171_gravifield.Controllers
     public class HomeController : Controller
     {
         public static Map MapPlanets = new Map();
-        
+        public ActionResult GetHtml()
+        {
+            return File(Server.MapPath("/Views/Home/Index.html"), "text/html");
+        }
+
+        public ActionResult GetCss()
+        {
+            return File(Server.MapPath("/Views/Home/css/styles.css"), "text/css");
+        }
+
+        public ActionResult GetJs()
+        {
+            return File(Server.MapPath("/Views/Home/js/scripts.js"), "text/js");
+        }
         public JsonResult Index() //Вывод всего
         {
             if (Calculator.Result is null) //подсчет не начат
@@ -43,7 +56,7 @@ namespace _171_gravifield.Controllers
             return RedirectToAction("Index");   
         }
 
-        [HttpPost]
+       [HttpPost]
         public ActionResult Add(string name, int x, int y, double mass)
         {
             MapPlanets.addPlanet(name, x, y, mass);
@@ -51,6 +64,7 @@ namespace _171_gravifield.Controllers
             {
                 Calculator.Result = null;//очищаем картинку
             }
+            Count();
             return RedirectToAction("Index");  
         }
 
@@ -58,6 +72,7 @@ namespace _171_gravifield.Controllers
         {
             MapPlanets.deletePlanet(id);
             Calculator.Result = null;//очищаем картинку
+            Count();
             return RedirectToAction("Index"); 
         }
 
@@ -67,11 +82,11 @@ namespace _171_gravifield.Controllers
             return RedirectToAction("Index");
         }
 
-        public RedirectResult Clear(string id)//Очистка всего
+        public ActionResult Clear(string id)//Очистка всего
         {
             MapPlanets = new Map();
             Calculator.Result = null;
-            return Redirect("/Home/Index");
+            return RedirectToAction("Index");
         }
     }
 }
