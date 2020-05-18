@@ -46,7 +46,7 @@ namespace _171_gravifield
                     int precolor = (int)Calculator.map(res, min, max, 0, 510);//переименовать, что ли?
                     if (precolor > 255)
                         TempResult.SetPixel(i, j, Color.FromArgb(precolor - 255, 510 - precolor, 0));
-                    else TempResult.SetPixel(i, j, Color.FromArgb(0, precolor, 255 - precolor));
+                    else TempResult.SetPixel(i, j, Color.FromArgb(precolor, precolor, precolor));
                 }
             Result = TempResult;
         }

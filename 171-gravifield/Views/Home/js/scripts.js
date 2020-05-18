@@ -159,15 +159,10 @@ function addClick(e) {
     // Поле ввода имени
     //result - переменные для проверки правильности полей, булевы
     e.preventDefault();
-    var expNamePlanet = /[a-z][a-z0-9]/i; //почему-то без разницы какое место занимает выражение. т.е. оно может начинаться или заканчиваться с цифры
-    var resultNamePlanet = expNamePlanet.test(namePlanet.value);
-    if (resultNamePlanet) {//Если валидация прошла
-        Planet.namePlanet = namePlanet.value;
-        namePlanet.style.borderColor = "green";
-    }
-    else namePlanet.style.borderColor = "red";
-
-
+    //Ваще не надо проверять имя планеты, ради всего святого
+	Planet.namePlanet = namePlanet.value;
+    namePlanet.style.borderColor = "green";
+    
     //поле ввода X
     var expXPlanet = /[0-9]/;
     var resultX = expXPlanet.test(xPlanet.value);
@@ -195,7 +190,7 @@ function addClick(e) {
     }
     else massPlanet.style.borderColor = "red";
     //Отправка данных на сервер
-    if (resultNamePlanet && resultX && resultY && resultMass) {
+    if (resultX && resultY && resultMass) {
         console.log("gooood");
         var dataAdd = "name=" + encodeURIComponent(Planet.namePlanet) + "&x=" + encodeURIComponent(Planet.xPlanet) + "&y="
             + encodeURIComponent(Planet.yPlanet) + "&mass=" + encodeURIComponent(Planet.massPlanet);
@@ -205,7 +200,8 @@ function addClick(e) {
             console.log("Error!!!");
             console.log(error);
         }).then(function (planetList) {
-            addInList(planetList);
+            addInList(planetList.Item2);
+			addImage(b64toBlob(planetList.Item1));
         });
 
         ///Очищаем поля
@@ -248,4 +244,34 @@ function deleteClick(e) {
         addInList(planetList);
     });
     selectList.options[selectedIndex] = null;
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+      var blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+}
+
+function addImage(blob)
+{
+	image = document.getElementById("PlanetImg");
+	image.src = URL.createObjectURL(blob);
 }

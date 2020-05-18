@@ -29,7 +29,7 @@ namespace _171_gravifield.Controllers
             {
                 ViewBag.x = MapPlanets.width;
                 ViewBag.y = MapPlanets.height;
-                return Json(MapPlanets.planets, JsonRequestBehavior.AllowGet); 
+                return Json(new Tuple<string, List<Planet>>("",MapPlanets.planets), JsonRequestBehavior.AllowGet); 
             }
             else
             {
@@ -40,19 +40,17 @@ namespace _171_gravifield.Controllers
                 ViewBag.Image = Url;
                 ViewBag.x = MapPlanets.width;
                 ViewBag.y = MapPlanets.height;
-                return Json(MapPlanets.planets, JsonRequestBehavior.AllowGet); 
+                Tuple<string, List<Planet>> t = new Tuple<string, List<Planet>>(Base64, MapPlanets.planets);
+                return Json(t, JsonRequestBehavior.AllowGet); 
             }
         }
 
         [HttpPost]
         public ActionResult Pole(int w, int h) //Получение x y
         {
+            MapPlanets = new Map();
             MapPlanets.width = w;
             MapPlanets.height = h;
-            if (!(Calculator.Result is null))
-            {
-                Calculator.Result = null;//очищаем картинку
-            }
             return RedirectToAction("Index");   
         }
 
@@ -60,27 +58,22 @@ namespace _171_gravifield.Controllers
         public ActionResult Add(string name, int x, int y, double mass)
         {
             MapPlanets.addPlanet(name, x, y, mass);
-            if(!(Calculator.Result is null))
-            {
-                Calculator.Result = null;//очищаем картинку
-            }
-            Count();
+            Calculator.Calculate(MapPlanets);
             return RedirectToAction("Index");  
         }
 
         public ActionResult Delete(string id) 
         {
             MapPlanets.deletePlanet(id);
-            Calculator.Result = null;//очищаем картинку
-            Count();
+            Calculator.Calculate(MapPlanets);
             return RedirectToAction("Index"); 
         }
 
-        public ActionResult Count() //Посчитать
+        /*public ActionResult Count() //Посчитать
         {
             Calculator.Calculate(MapPlanets);
             return RedirectToAction("Index");
-        }
+        }*/
 
         public ActionResult Clear(string id)//Очистка всего
         {
