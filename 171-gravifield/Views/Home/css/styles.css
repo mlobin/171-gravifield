@@ -1,11 +1,18 @@
-﻿.form-group {
+﻿/*  Это для того, чтобы текст не выделялся при передвижении блоков*/
+::selection {
+    background: transparent;
+}
+
+::-moz-selection {
+    background: transparent;
+}
+
+
+
+.form-group {
     background-color: #4CAF50;
-    border: 1px solid green; /* Green border */
-    /*   color: white; /* White text */
-    padding: 10px; /* Some padding */
-    /*  cursor: pointer; /* Pointer/hand icon */
     width: 100%; /* Set a width if needed */
-    /*    display: block; /* Make the buttons appear below each other */
+
 }
 
 label, label {
@@ -15,11 +22,21 @@ label, label {
 
 .submit {
     margin-top: 10px;
+    margin-bottom: 10px;
     margin-left: 60px;
 }
 
+body {
+background:black;
+}
+
+p {
+color:black;
+}
+
 .addPlanetDiv {
-    position: relative;
+    background: white;
+    position: absolute;
     left: 5%;
     top: 2%; /* Положение от нижнего края */
     float: left; /* Обтекание по правому краю */
@@ -27,7 +44,8 @@ label, label {
 }
 
 .editionPlanetDiv {
-    position: relative;
+    background: white;
+    position: absolute;
     left: 60%;
     top: 2%; /* Положение от нижнего края */
     float: left; /* Обтекание по правому краю */
@@ -35,5 +53,7 @@ label, label {
 }
 
 select {
-    width: 200px; /* Ширина списка в пикселах */
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 150px; /* Ширина списка в пикселах */
 }

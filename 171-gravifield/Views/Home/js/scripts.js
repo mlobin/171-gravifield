@@ -9,9 +9,12 @@ const addPlanetLabel = document.getElementById("idFormAdd");//Для скрыт�
 const editionPlanetLabel = document.getElementById("idFormAdd2");//Для скрытия формы получаем label
 addPlanetLabel.addEventListener("click", hiddenForm);//Для скрытия формы 
 editionPlanetLabel.addEventListener("click", hiddenForm2);//Для скрытия формы 
-var index = 0;//индекс элемента в selectList
-document.getElementById('editionPlanetDiv').onmousedown = replace;
-document.getElementById('addPlanetDiv').onmousedown = replace;
+const editionPlanetDiv = document.getElementById('editionPlanetDiv');
+const addPlanetDiv = document.getElementById('addPlanetDiv');
+
+editionPlanetForm.onmousedown = replace; //Добавляем событие для изменения положения формы
+addPlanetDiv.onmousedown = replace;//Добавляем событие для изменения положения формы
+
 function replace(e) { // 1. отследить нажатие
     var selectedform = document.getElementById(e.currentTarget.id);
     console.log(e.currentTarget.id)
@@ -58,18 +61,22 @@ addPlanetLabel.ondragstart = function () {//удаляем стандартны�
 function hiddenForm(event) {
     if (addPlanetForm.getAttribute("hidden")) {
         addPlanetForm.removeAttribute("hidden");
+        addPlanetDiv.style.opacity = '1';
     }
     else {
         addPlanetForm.setAttribute("hidden", "true");
+        addPlanetDiv.style.opacity = '0.5';
     }
 }
 
 function hiddenForm2(event) {
     if (editionPlanetForm.getAttribute("hidden")) {
         editionPlanetForm.removeAttribute("hidden");
+        editionPlanetDiv.style.opacity = '1';
     }
     else {
         editionPlanetForm.setAttribute("hidden", "true");
+        editionPlanetDiv.style.opacity = '0.5';
     }
 
 }
@@ -78,12 +85,12 @@ function hiddenForm2(event) {
 //и добавляем событие на ресайз окна браузера 
 window.addEventListener('resize', resizeWindow);
 var sizeWindow = {
-    intViewportHeight: window.innerHeight,
-    intViewportWidth: window.innerWidth
+    intViewportHeight: document.documentElement.clientHeight,
+    intViewportWidth: document.documentElement.clientWidth
 };
 function resizeWindow(event) {
-    sizeWindow.intViewportHeight = window.innerHeight;
-    sizeWindow.intViewportWidth = window.innerWidth;
+    sizeWindow.intViewportHeight = document.documentElement.clientHeight;
+    sizeWindow.intViewportWidth = document.documentElement.clientWidth;
     console.log(sizeWindow.intViewportHeight);
     console.log(sizeWindow.intViewportWidth);
 };
@@ -126,7 +133,7 @@ function get(url) {
 ///
 ///Передаем данные размера поля запросом 
 ///
-var dataPole = "w=" + encodeURIComponent(sizeWindow.intViewportWidth) + "&h=" + encodeURIComponent(sizeWindow.intViewportHeight);
+var dataPole = "w=" + encodeURIComponent(sizeWindow.intViewportWidth-30) + "&h=" + encodeURIComponent(sizeWindow.intViewportHeight-30);
 set("/Home/Pole", dataPole).then(function (text) {
     console.log(text);
 }, function (error) {
@@ -136,7 +143,7 @@ set("/Home/Pole", dataPole).then(function (text) {
 ///
 ///Добавляем данные планеты
 ///
-const selectList = document.getElementById("selectList");
+const selectList = document.getElementById('selectList');
 const addButton = document.getElementById('submit');
 const namePlanet = document.getElementById('namePlanet');
 const xPlanet = document.getElementById('xPlanet');
@@ -159,10 +166,14 @@ function addClick(e) {
     // Поле ввода имени
     //result - переменные для проверки правильности полей, булевы
     e.preventDefault();
-    //Ваще не надо проверять имя планеты, ради всего святого
+    var expNamePlanet = /[a-z0-9]/i; //почему-то без разницы какое место занимает выражение. т.е. оно может начинаться или заканчиваться с цифры
+    var resultNamePlanet = expNamePlanet.test(namePlanet.value);
+    if (resultNamePlanet) {//Если валидация прошла
 	Planet.namePlanet = namePlanet.value;
     namePlanet.style.borderColor = "green";
-    
+    }
+    else namePlanet.style.borderColor = "red";
+
     //поле ввода X
     var expXPlanet = /[0-9]/;
     var resultX = expXPlanet.test(xPlanet.value);
@@ -190,7 +201,7 @@ function addClick(e) {
     }
     else massPlanet.style.borderColor = "red";
     //Отправка данных на сервер
-    if (resultX && resultY && resultMass) {
+    if (resultNamePlanet && resultX && resultY && resultMass) {
         console.log("gooood");
         var dataAdd = "name=" + encodeURIComponent(Planet.namePlanet) + "&x=" + encodeURIComponent(Planet.xPlanet) + "&y="
             + encodeURIComponent(Planet.yPlanet) + "&mass=" + encodeURIComponent(Planet.massPlanet);
@@ -203,9 +214,8 @@ function addClick(e) {
             addInList(planetList.Item2);
 			addImage(b64toBlob(planetList.Item1));
         });
-
-        ///Очищаем поля
-        /*
+        
+        //Очищаем поля
         namePlanet.value = '';
         namePlanet.style.borderColor = '';
         xPlanet.value = '';
@@ -214,7 +224,7 @@ function addClick(e) {
         yPlanet.style.borderColor = '';
         massPlanet.value = '';
         massPlanet.style.borderColor = '';
-        */
+      
         
     }
 }
