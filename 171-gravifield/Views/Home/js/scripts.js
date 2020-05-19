@@ -12,7 +12,7 @@ editionPlanetLabel.addEventListener("click", hiddenForm2);//Для скрыти�
 const editionPlanetDiv = document.getElementById('editionPlanetDiv');
 const addPlanetDiv = document.getElementById('addPlanetDiv');
 
-editionPlanetForm.onmousedown = replace; //Добавляем событие для изменения положения формы
+editionPlanetDiv.onmousedown = replace; //Добавляем событие для изменения положения формы
 addPlanetDiv.onmousedown = replace;//Добавляем событие для изменения положения формы
 
 function replace(e) { // 1. отследить нажатие
@@ -250,8 +250,8 @@ function deleteClick(e) {
         console.log("Error!!!");
         console.log(error);
     }).then(function (planetList) {
-        console.log(planetList);
-        addInList(planetList);
+        addInList(planetList.Item2);
+        addImage(b64toBlob(planetList.Item1));
     });
     selectList.options[selectedIndex] = null;
 }
