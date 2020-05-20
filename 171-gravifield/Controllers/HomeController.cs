@@ -8,8 +8,8 @@ namespace _171_gravifield.Controllers
 {
     public class HomeController : Controller
     {
-        public static Map MapPlanets = new Map();
-        public ActionResult GetHtml()
+        public static Map MapPlanets = null;
+        public ActionResult Index()
         {
             return File(Server.MapPath("/Views/Home/Index.html"), "text/html");
         }
@@ -23,18 +23,17 @@ namespace _171_gravifield.Controllers
         {
             return File(Server.MapPath("/Views/Home/js/scripts.js"), "text/js");
         }
-        public JsonResult Index() //Вывод всего
+        public JsonResult Data() //Вывод всего
         {
-            if (Calculator.Result is null) //подсчет не начат
+            if (Calculator.Picture is null) //подсчет не начат
             {
-                ViewBag.x = MapPlanets.width;
-                ViewBag.y = MapPlanets.height;
-                return Json(new Tuple<string, List<Planet>>("",MapPlanets.planets), JsonRequestBehavior.AllowGet); 
+ 
+                return Json(new Tuple<string, List<Planet>>("",new List<Planet>()), JsonRequestBehavior.AllowGet); 
             }
             else
             {
                 //подсчет для картинки
-                byte[] pic = Calculator.Result.ConvertToByteArray();
+                byte[] pic = Calculator.Picture;
                 string Base64 = Convert.ToBase64String(pic);
                 string Url = string.Format("data:image/png;base64,{0}", Base64);
                 ViewBag.Image = Url;
@@ -51,22 +50,22 @@ namespace _171_gravifield.Controllers
             MapPlanets = new Map();
             MapPlanets.width = w;
             MapPlanets.height = h;
-            return RedirectToAction("Index");   
+            return RedirectToAction("Data");   
         }
 
        [HttpPost]
         public ActionResult Add(string name, int x, int y, double mass)
         {
             MapPlanets.addPlanet(name, x, y, mass);
-            Calculator.Calculate(MapPlanets);
-            return RedirectToAction("Index");  
+            Calculator.getResult(MapPlanets);
+            return RedirectToAction("Data");  
         }
 
         public ActionResult Delete(string id) 
         {
             MapPlanets.deletePlanet(id);
-            Calculator.Calculate(MapPlanets);
-            return RedirectToAction("Index"); 
+            Calculator.getResult(MapPlanets);
+            return RedirectToAction("Data"); 
         }
 
         /*public ActionResult Count() //Посчитать
@@ -78,8 +77,8 @@ namespace _171_gravifield.Controllers
         public ActionResult Clear(string id)//Очистка всего
         {
             MapPlanets = new Map();
-            Calculator.Result = null;
-            return RedirectToAction("Index");
+            Calculator.Picture = null;
+            return RedirectToAction("Data");
         }
     }
 }
