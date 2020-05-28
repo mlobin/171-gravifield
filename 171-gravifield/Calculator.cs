@@ -17,7 +17,7 @@ namespace _171_gravifield
         public static byte[] Picture;
 
         public const double G = 6.67191 * 1e-11;
-        static double speed = 0;
+        static double speed = 0.1;
         static double mx = 0, m = 0, my = 0;
 
         //TODO: параллельность
